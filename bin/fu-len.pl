@@ -71,8 +71,8 @@ foreach my $input_file (@ARGV) {
 		my $len = length($s->{seq});
 		
 		# Length Check
-		next if ($len < $opt_minlen);
-		next if ($len > $opt_maxlen);
+		next if (defined $opt_minlen and $len < $opt_minlen);
+		next if (defined $opt_maxlen and $len > $opt_maxlen);
 
 		$global_counter++;
 		$local_counter++;	

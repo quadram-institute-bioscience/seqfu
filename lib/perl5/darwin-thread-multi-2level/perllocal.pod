@@ -1,0 +1,66 @@
+=head2 Mon Mar 16 09:57:15 2020: C<Module> L<FASTX::Reader|FASTX::Reader>
+
+=over 4
+
+=item *
+
+C<installed into: /Users/telatina/git/seqfu/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.70>
+
+=item *
+
+C<EXE_FILES: bin/fqc bin/fqlen.pl>
+
+=back
+
+=head2 Mon Mar 16 09:57:32 2020: C<Module> L<Bio::Trace::ABIF|Bio::Trace::ABIF>
+
+=over 4
+
+=item *
+
+C<installed into: /Users/telatina/git/seqfu/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.06>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar 16 09:57:33 2020: C<Module> L<FASTX::Abi|FASTX::Abi>
+
+=over 4
+
+=item *
+
+C<installed into: /Users/telatina/git/seqfu/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.11>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+

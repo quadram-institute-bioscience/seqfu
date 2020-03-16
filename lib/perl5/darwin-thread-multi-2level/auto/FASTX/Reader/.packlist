@@ -1,0 +1,9 @@
+/Users/telatina/git/seqfu/bin/fqc
+/Users/telatina/git/seqfu/bin/fqlen.pl
+/Users/telatina/git/seqfu/lib/perl5/FASTX/Reader.pm
+/Users/telatina/miniconda3/bin/fqc relocate_as=../../../../../../../bin/fqc
+/Users/telatina/miniconda3/bin/fqlen.pl relocate_as=../../../../../../../bin/fqlen.pl
+/Users/telatina/miniconda3/lib/site_perl/5.26.2/FASTX/Reader.pm relocate_as=../../../../FASTX/Reader.pm
+/Users/telatina/miniconda3/man/man1/fqc.1 relocate_as=../../../../../../../man/man1/fqc.1
+/Users/telatina/miniconda3/man/man1/fqlen.pl.1 relocate_as=../../../../../../../man/man1/fqlen.pl.1
+/Users/telatina/miniconda3/man/man3/FASTX::Reader.3 relocate_as=../../../../../../../man/man3/FASTX::Reader.3

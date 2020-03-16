@@ -1,4 +1,4 @@
-#!/Users/telatina/miniconda3/bin/env perl
+#!/usr/bin/env perl
 # ABSTRACT: A demo implementation to filter fastx files by length
 # PODNAME: fqlen.pl
 

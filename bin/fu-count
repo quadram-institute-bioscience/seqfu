@@ -1,4 +1,4 @@
-#!/Users/telatina/miniconda3/bin/env perl
+#!/usr/bin/env perl
 # ABSTRACT: A FASTA/FASTQ sequence counter
 # PODNAME: fqc
 

@@ -20,7 +20,7 @@ install:
   - conda info -a
 
   # Replace dep1 dep2 ... with your dependencies
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION -c bioconda n50 interleafq any2fasta
+  - conda create -q -n test-environment  -y -c bioconda n50 interleafq any2fasta
   - conda activate test-environment
 
 script:

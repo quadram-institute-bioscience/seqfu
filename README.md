@@ -6,5 +6,6 @@ A collection of Sequence FASTX Utilities, partly shipped with this repository an
 
 * **fu-grep.pl**, extract sequences by DNA pattern, by name or comment
 * **fu-len.pl**, filter sequences by size
+* **fu-rename.pl**, rename sequences with a prefix
 * **n50**, calculate N50, number of sequences, minimum, maximum and total length
 * **interleafq**, interleave and deinterleave paired sequences

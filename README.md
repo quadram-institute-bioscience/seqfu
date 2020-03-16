@@ -1,4 +1,5 @@
-![SeqFU logo](docs/seqfu-logo-small.png)
-<img align="right" width="100" height="100" src="http://www.fillmurray.com/100/100">
+ 
+<img alt="seqfu logo" align="right" width="200" height="200" src="https://github.com/quadram-institute-bioscience/seqfu/raw/master/docs/seqfu-logo-small.png">
+
 # seqfu
 Sequence Fastx Utilities

@@ -1,4 +1,4 @@
-![SeqFU logo](docs/seqfu-logo.png)
+![SeqFU logo](docs/seqfu-logo-small.png)
 
 # seqfu
 Sequence Fastx Utilities

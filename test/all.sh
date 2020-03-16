@@ -3,6 +3,10 @@ TEST_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 SCRIPTS="$TEST_DIR/../bin"
 INPUT="$TEST_DIR/../data/test.fa"
 
+echo -e "Env path:\t$(which env)"
+echo -e "Perl path:\t$(which perl)"
+echo -e "Perl version:\t$(env perl -v | grep version)"
+
 echo -e "conda_prefix:\t$CONDA_PREFIX"
 echo -e "conda_prompt:\t$CONDA_PROMPT_MODIFIER"
 echo -e "current_path:\t$PWD"

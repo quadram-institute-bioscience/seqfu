@@ -1,0 +1,2 @@
+# seqfu
+Sequence Fastx Utilities

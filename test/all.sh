@@ -48,6 +48,7 @@ else
 	exit
 fi
 
-
+# Conda installed:
+n50 $INPUT
 
 

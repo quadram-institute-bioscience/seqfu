@@ -9,6 +9,20 @@ echo -e "current_path:\t$PWD"
 echo -e "list_binaries:\n"$(ls "$SCRIPTS")
 echo ''
 
+if [ ! -e "$INPUT" ]; then
+	echo "Input file ($INPUT) not found"
+fi
+
+set -x pipefail
+
+$SCRIPTS/fu-len.pl      -m 150 -x 170 $INPUT
+$SCRIPTS/fu-grep.pl   GGGGGGGGGGGGGGG $INPUT 
+
+set +x pipefail
+
+
+# ----------------------------------------------------------------
+
 echo -ne "[fq-len]\tcheck minimum length:\t"
 MIN_LEN=$($SCRIPTS/fu-len.pl -m 100 $INPUT 2>/dev/null | wc -l)
 if [[ $MIN_LEN -eq 8 ]]; then

@@ -23,7 +23,7 @@ if (-e "$file" and -e "$script") {
 	my @data = split /\t/, $output;
 	ok($#data >= 10,  "Tabular output produced");
 	ok($data[0] =~/^#/, "Header produced");
-	ok($data[7] == 7_530, "Total size is 7,530: $data[7]");
+	ok($data[11] == 7_530, "Total size is 7,530: $data[11]");
 
 
 	# THOUSAND SEPARATOR
@@ -36,7 +36,7 @@ if (-e "$file" and -e "$script") {
 	@data = split /\t/, $output;
 	ok($#data >= 10,  "Tabular output produced");
 	ok($data[0] =~/^#/, "Header produced");
-	ok($data[7] eq "7,530", "Total size is 7,530 with thousand separator: $data[7]");
+	ok($data[11] eq "7,530", "Total size is 7,530 with thousand separator: $data[11]");
 }
 
 done_testing();

@@ -34,7 +34,7 @@ if (-e "$file" and -e "$script") {
 	chomp($output);
 
 	@data = split /\t/, $output;
-	ok($#data == 10,  "Tabular output produced");
+	ok($#data >= 10,  "Tabular output produced");
 	ok($data[0] =~/^#/, "Header produced");
 	ok($data[7] eq "7,530", "Total size is 7,530 with thousand separator: $data[7]");
 }

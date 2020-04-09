@@ -21,7 +21,7 @@ if (-e "$file" and -e "$script") {
 	chomp($output);
 
 	my @data = split /\t/, $output;
-	ok($#data == 10,  "Tabular output produced");
+	ok($#data >= 10,  "Tabular output produced");
 	ok($data[0] =~/^#/, "Header produced");
 	ok($data[7] == 7_530, "Total size is 7,530: $data[7]");
 

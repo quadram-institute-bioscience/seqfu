@@ -26,12 +26,15 @@ our @EXPORT = qw(getStats getN50 jsonStats);
   # Will print:
   # %FASTA_stats = (
   #               'N50' => 65,
+  #               'N75' => 50,
+  #               'N90' => 4,
   #               'min' => 4,
   #               'max' => 65,
   #               'dirname' => 'data',
+  #               'auN' => 45.02112,
   #               'size' => 130,
   #               'seqs' => 6,
-  #               'filename' => 'small_test.fa',
+  #               'filename' => 'test.fa',
   #               'status' => 1
   #             );
 
@@ -99,7 +102,11 @@ file basename of the input file
 
 =item I<dirname> (string)
 
-name of the directory containing the input file (absolute path since 1.2.0)
+name of the directory containing the input file (as received)
+
+=item I<path> (string)
+
+name of the directory containing the input file (resolved to its absolute path)
 
 =back
 

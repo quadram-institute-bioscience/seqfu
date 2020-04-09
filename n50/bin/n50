@@ -555,7 +555,7 @@ __END__
 =head1 DESCRIPTION
 
 This program parses a list of FASTA/FASTQ files calculating for each one the
-number of sequences, the sum of sequences lengths and the N50.
+number of sequences, the sum of sequences lengths and the N50, N75, N90 and auN.
 It will print the result in different formats, by default only the N50 is printed
 for a single file and all metrics in TSV format for multiple files.
 

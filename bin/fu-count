@@ -1,19 +1,24 @@
 #!/usr/bin/env perl
 # ABSTRACT: A FASTA/FASTQ sequence counter
-# PODNAME: fqc
+# PODNAME: fu-count
 
 use 5.012;
 use Pod::Usage;
 use Term::ANSIColor;
 use Getopt::Long;
-use FindBin qw($Bin);
-use lib "$Bin/../lib";
+use FindBin qw($RealBin);
+if (-e "$RealBin/../lib/perl5/FASTX/Reader.pm") {
+  use lib "$RealBin/../lib/perl5";
+} elsif ( -e "$RealBin/lib/FASTX/Reader.pm") {
+  use lib "$RealBin/lib";
+}
 use File::Basename;
 use FASTX::Reader;
 use Data::Dumper;
 use JSON::PP;
 
-die "ERROR: FASTX::Reader required version is >= 0.3\n" if ($FASTX::Reader::VERSION < 0.3);
+die "ERROR: FASTX::Reader required version is >= 0.6 [$FASTX::Reader::VERSION found]\n"
+ if ($FASTX::Reader::VERSION !~/^[1-9]\./ and $FASTX::Reader::VERSION < 0.6);
 
 my %output;
 my $sort_function;
@@ -59,7 +64,7 @@ foreach my $input_file (@ARGV) {
   $output{$abs_path}{order} = $counter;
 
   if (! -e "$input_file") {
-    
+
     $output{$abs_path}{count} = $opt_invalid;
     $output{$abs_path}{print_count} = $opt_invalid;
     $output{$abs_path}{parser} = "NONE";
@@ -80,7 +85,7 @@ foreach my $input_file (@ARGV) {
     if ($seq_reader->{status} == 0) {
       $output{$abs_path}{count} = "$opt_invalid";
       $output{$abs_path}{print_count} = "$opt_invalid";
-    }  
+    }
   } else {
     # generic FASTX parser
     while (my $seq = $seq_reader->getRead()) {
@@ -213,11 +218,7 @@ __END__
 
 =head1 NAME
 
-fqc - A FASTA/FASTQ sequence counter
-
-=head1 VERSION
-
-version 0.70
+fu-count - A FASTA/FASTQ sequence counter
 
 =head1 SYNOPSIS
 

@@ -1,13 +1,13 @@
-{% set name = "n50" %}
-{% set version = "0.92" %}
-{% set sha256 = "b73ee417e56a99f45dac4fc9c8238bed857b6d39acf11c59453c45276fdd1716" %}
+{% set name = "seqfu" %}
+{% set version = "0.1.0" %}
+{% set sha256 = "9f87b16e7144a07143a2c5deed6a849f56eced7956c931f832baac738a170f9f" %}
 
 package:
   name: {{ name }}
   version: {{ version }}
 
 source:
-  url: https://cpan.metacpan.org/authors/id/P/PR/PROCH/Proch-N50-{{ version }}.tar.gz
+  url: https://github.com/quadram-institute-bioscience/{{ name }}/archive/v.{{ version }}.tar.gz
   sha256: {{ sha256 }}
 
 build:
@@ -16,32 +16,32 @@ build:
 
 requirements:
   host:
-    - n50
-    - interleafq
     - any2fasta
+    - interleafq
+    - n50
     - perl
     - perl-app-cpanminus
-    - perl-file-which
-    - perl-json-pp
-    - perl-fastx-reader
-    - perl-fastx-abi
-    - perl-getopt-long
     - perl-exporter
-    - perl-text-asciitable
+    - perl-fastx-abi
+    - perl-fastx-reader
+    - perl-file-which
+    - perl-getopt-long
+    - perl-json-pp
     - perl-pod-usage
+    - perl-text-asciitable
 
   run:
+    - interleafq
+    - n50
     - perl
+    - perl-exporter
+    - perl-fastx-ab1
+    - perl-fastx-reader
     - perl-file-which
     - perl-getopt-long
     - perl-json-pp
-    - perl-fastx-reader
-    - perl-fastx-ab1
-    - perl-exporter
-    - perl-text-asciitable
     - perl-pod-usage
-    - n50
-    - interleafq
+    - perl-text-asciitable
 
 test:
   files:
@@ -50,6 +50,7 @@ test:
   # (see run_test.sh for remainder of tests)
   # Perl 'use' tests
     - perl -e "use FASTX::Reader"
+    - perl -e "use FASTX::Abi"
     - perl -e "use Proch::N50"
 
 
@@ -57,3 +58,7 @@ about:
   home: http://github.com/quadram-institute-bioscience/seqfu/
   license: mit
   summary: 'DNA sequence utilities (N50, de/interleave FASTQ, grep etc.)'
+
+extra:
+  identifiers:
+    - biotools:{{ name }}

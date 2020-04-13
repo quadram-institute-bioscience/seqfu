@@ -9,7 +9,7 @@ cp test.fa $TMPDIR
 cd $TMPDIR
 
 # TEST N50
-echo -n "Calculating N50 of test.fa:"
+echo -n "[n50] Calculating N50 of test.fa:"
 N50=$(n50 test.fa)
 
 if [[ $N50 == '640' ]]; then
@@ -22,7 +22,7 @@ fi
 # TEST GREP
 GREP=$(fu-grep.pl -n gnl  test.fa | grep '>' | wc -l)
 if [[ $GREP == '3' ]]; then
- echo " GREP OK: $GREP [PASS]"
+ echo "[fu-grep] GREP OK: $GREP [PASS]"
 else
  echo "FAILED: GREP didnt retrieve 3 sequences from test.fa"
  exit 1

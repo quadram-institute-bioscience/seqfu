@@ -74,13 +74,15 @@ for my $file (@ARGV) {
 		} else {
 			if ($seq->{seq} =~/$regex/i) {
 				$print++;
+
+				# Prepare annotation with results
 				if ($opt_annotate) {
 					my $matches = 0;
 					my $for = 0;
 					my $rev = 0;
 					while ($seq->{seq} =~/$regex/gi) {
 						$matches++;
-						if ($1 eq $pattern) {
+						if (uc($1) eq uc($pattern)) {
 							$for++;
 						} else {
 							$rev++
@@ -153,9 +155,9 @@ sub rc {
 	return $string;
 }
 sub vprint {
-	say $_[0] if ($opt_verbose or $opt_debug) ;
+	say STDERR $_[0] if ($opt_verbose or $opt_debug) ;
 }
 
 sub dprint {
-	say "#$_[0]" if ($opt_debug);
+	say STDERR "#$_[0]" if ($opt_debug);
 }

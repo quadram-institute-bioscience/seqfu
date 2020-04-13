@@ -1,1 +1,0 @@
-{"target":"FASTX::Reader","pathname":"P/PR/PROCH/FASTX-Reader-0.70.tar.gz","version":"0.70","name":"FASTX::Reader","dist":"FASTX-Reader-0.70","provides":{"FASTX::Reader":{"file":"lib/FASTX/Reader.pm","version":"0.70"}}}

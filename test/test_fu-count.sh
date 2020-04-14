@@ -10,6 +10,6 @@ then   printf "  $PASS\n"; else   printf "$FAIL: expecting 40 sequence, $TOT fou
 
 echo "Count lines in JSON format: "
 GZIP=$(ls  data/*fa*gz  |wc -l)
-JSON=$(fu-count -p data/*fa* | grep compressed| cut -f2 -d: | sed 's/,//'| awk ' {sum+=$1} END {print sum}')
+JSON=$($SCRIPTS/fu-count -p data/*fa* | grep compressed| cut -f2 -d: | sed 's/,//'| awk ' {sum+=$1} END {print sum}')
 if [[ $JSON -eq $GZIP ]];
 then   printf "  $PASS\n"; else   printf "$FAIL: expecting $GZIP compressed, $JSON found"; fi

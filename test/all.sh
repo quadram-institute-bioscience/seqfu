@@ -21,8 +21,8 @@ fi
 
 set -x pipefail
 
-$SCRIPTS/fu-len.pl      -m 150 -x 170 $INPUT
-$SCRIPTS/fu-grep.pl   GGGGGGGGGGGGGGG $INPUT
+$SCRIPTS/fu-len      -m 150 -x 170 $INPUT
+$SCRIPTS/fu-grep   GGGGGGGGGGGGGGG $INPUT
 set -eo pipefail
 set +x pipefail
 
@@ -30,7 +30,7 @@ set +x pipefail
 # ----------------------------------------------------------------
 
 echo -ne "[fq-len]\tcheck minimum length:\t"
-MIN_LEN=$($SCRIPTS/fu-len.pl -m 100 $INPUT 2>/dev/null | wc -l)
+MIN_LEN=$($SCRIPTS/fu-len -m 100 $INPUT 2>/dev/null | wc -l)
 if [[ $MIN_LEN -eq 8 ]]; then
 	printf "$PASS"
 else
@@ -40,7 +40,7 @@ fi
 echo ""
 
 echo -ne "[fq-len]\tmin and max length:\t"
-MINMAX=$($SCRIPTS/fu-len.pl -m 10 -x 150 $INPUT 2>/dev/null| wc -l)
+MINMAX=$($SCRIPTS/fu-len -m 10 -x 150 $INPUT 2>/dev/null| wc -l)
 if [[ $MINMAX -eq 2 ]]; then
 	printf "$PASS"
 else
@@ -50,7 +50,7 @@ fi
 echo ""
 
 echo -ne "[fq-grep]\tcheck forward match:\t"
-GREP1=$($SCRIPTS/fu-grep.pl   CCCC $INPUT 2>/dev/null|wc -l )
+GREP1=$($SCRIPTS/fu-grep   CCCC $INPUT 2>/dev/null|wc -l )
 if [[ $GREP1 -eq 8 ]]; then
 	printf  "$PASS"
 else
@@ -60,7 +60,7 @@ fi
 echo ""
 
 echo -ne "[fq-grep]\tcheck reverse compl.:\t"
-GREP2=$($SCRIPTS/fu-grep.pl   GGGG $INPUT 2>/dev/null|wc -l )
+GREP2=$($SCRIPTS/fu-grep   GGGG $INPUT 2>/dev/null|wc -l )
 if [[ $GREP2 -eq 8 ]]; then
 	printf "$PASS"
 else
@@ -70,7 +70,7 @@ fi
 echo ""
 
 echo -ne "[fq-rename]\tcheck prefix rename:\t"
-RENAME=$($SCRIPTS/fu-rename.pl $INPUT -p new_prefix 2>/dev/null| grep new_prefix | wc -l)
+RENAME=$($SCRIPTS/fu-rename $INPUT -p new_prefix 2>/dev/null| grep new_prefix | wc -l)
 if [[ $RENAME -eq 8 ]]; then
 	printf "$PASS"
 else

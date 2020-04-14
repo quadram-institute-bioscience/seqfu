@@ -9,6 +9,7 @@ if [[ $TOT -eq 40 ]];
 then   printf "  $PASS\n"; else   printf "$FAIL: expecting 40 sequence, $TOT found"; fi
 
 echo "Count lines in JSON format: "
+GZIP=$(ls  data/*fa*gz  |wc -l)
 JSON=$(fu-count -p data/*fa* | grep compressed| cut -f2 -d: | sed 's/,//'| awk ' {sum+=$1} END {print sum}')
-if [[ $JSON -eq 1 ]];
-then   printf "  $PASS\n"; else   printf "$FAIL: expecting 1 compressed, $JSON found"; fi
+if [[ $JSON -eq $GZIP ]];
+then   printf "  $PASS\n"; else   printf "$FAIL: expecting $GZIP compressed, $JSON found"; fi

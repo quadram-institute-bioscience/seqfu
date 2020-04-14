@@ -5,11 +5,8 @@ use warnings;
 use Getopt::Long;
 use FindBin qw($RealBin);
 
-if (-d "$RealBin/lib/FASTX/Reader.pm") {
-	use lib "$RealBin/lib";
-}
-if (-d "$RealBin/../lib/perl5/FASTX/Reader.pm") {
-	use lib "$RealBin/../lib/perl5/";
+if ( -e "$RealBin/../seqfu/") {
+    use lib  "$RealBin/../seqfu/";
 }
 use FASTX::Reader;
 use File::Basename;

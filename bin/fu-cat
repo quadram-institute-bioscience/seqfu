@@ -7,8 +7,8 @@ use Getopt::Long;
 use Pod::Usage;
 use File::Basename;
 use FindBin qw($RealBin);
-if ( -e "$RealBin/../lib/perl5/") {
-    use lib  "$RealBin/../lib/perl5/";
+if ( -e "$RealBin/../seqfu/") {
+    use lib  "$RealBin/../seqfu/";
 }
 use FASTX::Reader;
 use Local::SeqFu;

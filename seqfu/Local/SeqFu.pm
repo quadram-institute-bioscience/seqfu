@@ -6,16 +6,16 @@ use Data::Dumper;
 use Term::ANSIColor qw(:constants);
 require Exporter;
 
-$Local::SeqFu::VERSION = '0.2.0';
+$Local::SeqFu::VERSION = '0.5.0';
 $Local::SeqFu::fu_linesize = 0;
 $Local::SeqFu::fu_verbose  = 0;
 
 our @ISA = qw(Exporter);
-our @EXPORT = qw(rc fu_printfasta fu_printfastq verbose); 
+our @EXPORT = qw(rc fu_printfasta fu_printfastq verbose);
 our @EXPORT_OK = qw(munge frobnicate $fu_linesize $fu_verbose);  # symbols to export on request
 
 
-  
+
 
 sub fu_printfasta {
     my ($name, $comment, $seq) = @_;
@@ -23,10 +23,10 @@ sub fu_printfasta {
     if (defined $comment) {
         $print_comment = ' ' . $comment;
     }
-    
+
     say '>', $name, $print_comment;
     print split_string($seq);
-}  
+}
 
 sub fu_printfastq {
     my ($name, $comment, $seq, $qual) = @_;
@@ -34,10 +34,10 @@ sub fu_printfastq {
     if (defined $comment) {
         $print_comment = ' ' . $comment;
     }
-    
-    say '@', $name, $print_comment; 
+
+    say '@', $name, $print_comment;
     print split_string($seq) , "+\n", split_string($qual);
-}  
+}
 
 # Print verbose info
 sub verbose {

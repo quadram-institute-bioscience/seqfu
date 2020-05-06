@@ -1,35 +1,33 @@
 #!/usr/bin/env perl
-# ABSTRACT: Concatenate FASTA or FASTQ files
-# PODNAME: fu-cat
+# ABSTRACT: Dereplicate sequences
+# PODNAME: fu-derep
 
 use 5.012;
 use Getopt::Long;
 use Pod::Usage;
 use File::Basename;
+use Digest::MD5 qw( md5_hex );
 use FindBin qw($RealBin);
-#        Repository            Conda           
-use lib  "$RealBin/../seqfu/", "$RealBin/seqfu/";
+use lib  "$RealBin/../seqfu/", "$RealBin/seqfu/", "$RealBin/../lib/perl5",  "$RealBin/lib"; 
 
 use FASTX::Reader;
 use Local::SeqFu;
 
 my $PROGRAM = basename($0);
 my $VERSION = $Local::SeqFu::VERSION;
-my ($opt_force_fasta, $opt_force_fastq, $opt_upper, $opt_help, $opt_verbose, $opt_version);
-my ($opt_minlen, $opt_maxlen);
-my $opt_separator = '.';
-my $opt_rename_string;
+my ($opt_rename_prefix, $opt_fast,$opt_rename_with_hash, $opt_help, $opt_verbose, $opt_version);
+my $opt_upper = 1;
+my $opt_size_as_comment;
+my $opt_nosize;
 my $opt_line_size = $Local::SeqFu::fu_linesize;
 
 if (!GetOptions(
-    'f|fasta'       => \$opt_force_fasta,
-    'q|fastq'       => \$opt_force_fastq,
-    'r|rename=s'    => \$opt_rename_string,
-    's|separator=s' => \$opt_separator,
+    'h|hash'        => \$opt_rename_with_hash,
+    'f|fast'        => \$opt_fast,
+    'p|prefix=s'    => \$opt_rename_prefix,
     'w|width=i'     => \$opt_line_size,
-    'u|uppercase'   => \$opt_upper,
-    'l|minlen=i'    => \$opt_minlen,
-    'm|maxlen=i'    => \$opt_maxlen,
+    'c|size-as-comment' => \$opt_size_as_comment,
+    'n|no-size'     => \$opt_nosize,
     'version'       => \$opt_version,
     'verbose'       => \$opt_verbose,
     'help'          => \$opt_help,
@@ -43,8 +41,11 @@ $Local::SeqFu::fu_linesize  = $opt_line_size;
 $Local::SeqFu::fu_verbose   = $opt_verbose;
 
 # Check consistency of parameters
-if ($opt_force_fasta and $opt_force_fastq){
-    die " PARAMETER ERROR:\n You must specify either --fasta or --fastq (or none), not both.\n";
+if ($opt_rename_prefix and $opt_rename_with_hash) {
+    die " ERROR: Please specify either --hash or --prefix to rename sequences with MD5 or a string\n";
+}
+if ($opt_fast and ($opt_size_as_comment)) {
+    say STDERR "WARNING: Size will not be printed in fast mode.";
 }
 
 # Print version
@@ -62,35 +63,7 @@ if (not defined $ARGV[0]) {
 } 
 
 
-# Autodetect output format if not specified
-if (not $opt_force_fasta and not $opt_force_fastq){
-    # Prescan all the files ...
-    for my $filename (@ARGV) {
-
-        if ($filename eq '-' or $filename eq '{{STDIN}}') {
-            $opt_force_fasta = 1;
-            verbose("When requiring to parse STDIN, output format is defaulted to FASTA (unless --fastq is on)")
-        }
-        if (not defined $opt_force_fastq and not defined $opt_force_fasta) {
-            verbose "Autodetecting ";
-            my $fx_reader = FASTX::Reader->new({ filename => "$filename" });
-            if ($filename ne '-') {
-                my $format = $fx_reader->getFileFormat("$filename");
-                if ($format eq 'fasta') {
-                    $opt_force_fasta = 1;
-                }
-            }
-        }
-    }
-    if (not $opt_force_fasta) {
-        verbose("Output format: FASTQ");
-        $opt_force_fastq = 1;
-    } else {
-        verbose("Output format: FASTA");
-    }
-}
-
-
+my %seqs = ();
 my %printed_seqs = ();
 
 
@@ -99,30 +72,40 @@ for my $filename (@ARGV) {
     $filename = '{{STDIN}}' if ($filename eq '-');
     my $reader = FASTX::Reader->new({ filename => "$filename"});
     while (my $s = $reader->getRead() ) {
+        if ($opt_upper) {
+            $s->{seq} = uc($s->{seq});
+        }
         my $name = $s->{name};
-        if ($printed_seqs{ $s->{name} }) {
-            $name .= $opt_separator . $printed_seqs{ $s->{name} };
-        } 
-        $printed_seqs{ $s->{name} }++;
-        
-        # Skip short sequences
-        if (defined $opt_minlen and length($s->{seq} < $opt_minlen)) {
-            next;
+        my $hash = md5_hex(uc($s->{seq}));
+
+        if (not defined $opt_fast) {
+            $seqs{$hash}=$s->{seq} unless defined $seqs{$hash};
+            $printed_seqs{$hash}++;
+        } else {
+
+            $printed_seqs{ $hash }++;
+            
+            next if ($printed_seqs{ $hash} > 1);
+
+            # Print seq
+            fu_printfasta($name, undef, $s->{seq});
+
         }
-        # Skip long sequences
-        if (defined $opt_maxlen and length($s->{seq} > $opt_maxlen)) {
-            next;
-        }
         
-        # Print seq
-        if ($opt_force_fasta) {
-            $s->{seq} = uc($s->{seq}) if ($opt_upper);
-            fu_printfasta($name, $s->{comment}, $s->{seq});
-        } elsif ($opt_force_fastq) {
-            if (not defined $s->{qual}) {
-                die " FATAL ERROR [$filename]:\n Trying to print sequence <$name> in FASTQ format, but no quality found\n";
-            }
-            fu_printfastq($name, $s->{comment}, $s->{seq}, $s->{qual});
+
+        
+    }
+}
+
+if (not defined $opt_fast) {
+    for my $hash (sort {$a <=> $b} keys %printed_seqs) {
+        my $count = 0+$printed_seqs{$hash};
+        if ($opt_nosize) {
+            fu_printfasta("$hash", undef, $seqs{$hash});
+        } elsif ($opt_size_as_comment) {
+            fu_printfasta("$hash", "size=$count", $seqs{$hash});
+        } else {
+            fu_printfasta("$hash;size=$count", undef, $seqs{$hash});
         }
         
     }
@@ -144,6 +127,7 @@ sub version {
     say STDOUT "$PROGRAM $VERSION";
     exit;
 }
+ 
 __END__
 
 =pod

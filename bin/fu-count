@@ -7,11 +7,8 @@ use Pod::Usage;
 use Term::ANSIColor;
 use Getopt::Long;
 use FindBin qw($RealBin);
-if (-e "$RealBin/../lib/perl5/FASTX/Reader.pm") {
-  use lib "$RealBin/../lib/perl5";
-} elsif ( -e "$RealBin/lib/FASTX/Reader.pm") {
-  use lib "$RealBin/lib";
-}
+use lib  "$RealBin/../seqfu/", "$RealBin/seqfu/", "$RealBin/../lib/perl5",  "$RealBin/lib"; 
+
 use File::Basename;
 use FASTX::Reader;
 use Data::Dumper;

@@ -6,6 +6,8 @@ use 5.014;
 use FASTX::Reader;
 use Getopt::Long;
 use File::Basename;
+use FindBin qw($RealBin);
+use lib  "$RealBin/../seqfu/", "$RealBin/seqfu/", "$RealBin/../lib/perl5",  "$RealBin/lib"; 
 
 my $PROGRAM = 'fqlen';
 my $VERSION = '0.1';

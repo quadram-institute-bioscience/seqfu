@@ -11,6 +11,7 @@ if ( -e "$RealBin/../seqfu/") {
 use FASTX::Reader;
 use File::Basename;
 use Data::Dumper;
+my $opt_comment_separator = "\t";
 my $BASENAME = basename($0);
 my $warnings = 0;
 my ($opt_verbose, $opt_debug, $opt_fasta);
@@ -26,6 +27,8 @@ my $_opt          = GetOptions(
 	'c|comment'     => \$opt_search_in_comm, 
 	'f|fasta'       => \$opt_fasta,
 	'v|verbose'     => \$opt_verbose,
+	'cs|comment-separator=s' 
+	                => \$opt_comment_separator,
 	'd|debug'		=> \$opt_debug,
 );
 
@@ -60,7 +63,7 @@ for my $file (@ARGV) {
 	while (my $seq = $reader->getRead() ) {
 		my $print = 0;
 		my $comments = '';
-		$comments .= $seq->{comments} if defined $seq->{comments};
+		$comments .= $opt_comment_separator . $seq->{comment} if defined $seq->{comment};
 
 		if ($opt_search_in_comm) {
 			# search in comments

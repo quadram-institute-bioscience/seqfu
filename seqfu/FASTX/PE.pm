@@ -42,7 +42,7 @@ Initialize a new FASTX::Reader object passing 'B<filename>' argument for the fir
 and optionally 'B<rev>' for the second (otherwise can be guessed substituting 'R1' with 'R2' and
 '_1.' with '_2.')
 
-  my $pairend = FASTX::Reader->new({ 
+  my $pairend = FASTX::Reader->new({
       filename => "$file_R1",
       rev      => "$file_R2"
   });
@@ -126,14 +126,14 @@ sub new {
           $rev =~s/$self->{tag1}/$self->{tag2}/;
           $rev = dirname($self->{basename}) . $rev;
         } else {
-          
+
           $rev =~s/_R1/_R2/;
           say STDERR "R2 not provided, autoguess (_R1/_R2): $rev" if ($self->{verbose});
           if ($rev eq basename($self->{filename}) ) {
               $rev =~s/_1\./_2./;
               say STDERR "R2 not provided for $self->{filename}, now autoguess (_1/_2): $rev" if ($self->{verbose});
           }
- 
+
           $rev = dirname($self->{filename}) . '/' . $rev;
         }
 
@@ -153,7 +153,7 @@ sub new {
       }
 
       $self->{R1}  = FASTX::Reader->new({ filename => "$self->{filename}"});
-      $self->{R2}  = FASTX::Reader->new({ filename => "$self->{rev}"}) 
+      $self->{R2}  = FASTX::Reader->new({ filename => "$self->{rev}"})
         if (not $self->{interleaved});
 
     }
@@ -173,7 +173,7 @@ The returned object has these attributes:
 
 header of the sequence (identifier)
 
-=item I<comment1> and I<comment2> 
+=item I<comment1> and I<comment2>
 
 any string after the first whitespace in the header, for the first and second paired read respectively.
 
@@ -181,7 +181,7 @@ any string after the first whitespace in the header, for the first and second pa
 
 DNA sequence for the first and the second pair, respectively
 
-=item I<qual1> and I<qual2> 
+=item I<qual1> and I<qual2>
 
 quality for the first and the second pair, respectively
 
@@ -273,4 +273,3 @@ sub _rc {
   return $sequence;
 }
 1;
-

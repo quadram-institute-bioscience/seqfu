@@ -4,6 +4,7 @@
 # seqfu
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/seqfu/README.html)
+[![downloads](https://img.shields.io/conda/dn/bioconda/seqfu)](https://anaconda.org/bioconda/seqfu)
 [![version](https://img.shields.io/conda/vn/bioconda/seqfu?label=seqfu)](https://anaconda.org/bioconda/seqfu)
 [![Build Status](https://travis-ci.org/quadram-institute-bioscience/seqfu.svg?branch=master)](https://travis-ci.org/quadram-institute-bioscience/seqfu)
 

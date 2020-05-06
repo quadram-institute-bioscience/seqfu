@@ -15,6 +15,8 @@ echo -e "current_path:\t$PWD"
 echo -e "list_binaries:\n"$(ls "$SCRIPTS")
 echo ''
 
+chmod +x "$SCRIPTS"/*
+
 if [ ! -e "$INPUT" ]; then
 	echo "Input file ($INPUT) not found"
 fi

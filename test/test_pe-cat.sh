@@ -1,15 +1,13 @@
-echo "Count lines of of a sinfle FASTA file: "
-TOT=$($SCRIPTS/pe-cat $DATA/pe/test.fa  | awk ' {sum+=$2} END {print sum}')
-if [[ $TOT -eq 8 ]];
-then   printf "  $PASS\n"; else   printf "$FAIL: expecting 8 sequence, $TOT found"; fi
 
-echo "Count lines of two files, one being gzipped: "
-TOT=$($SCRIPTS/fu-count $DATA/test.fa $DATA/test_4.fa.gz | awk ' {sum+=$2} END {print sum}')
-if [[ $TOT -eq 40 ]];
-then   printf "  $PASS\n"; else   printf "$FAIL: expecting 40 sequence, $TOT found"; fi
+BIN="$SCRIPTS/pe-cat"
+echo " 1. Print paired end to STDOUT as interleaved"
 
-echo "Count lines in JSON format: "
-GZIP=$(ls  data/*fa*gz  |wc -l)
-JSON=$($SCRIPTS/fu-count -p data/*fa* | grep compressed| cut -f2 -d: | sed 's/,//'| awk ' {sum+=$1} END {print sum}')
-if [[ $JSON -eq $GZIP ]];
-then   printf "  $PASS\n"; else   printf "$FAIL: expecting $GZIP compressed, $JSON found"; fi
+TOT=$($BIN -io $DATA/illumina_?.* | grep '^@A00'  | wc -l )
+if [[ $TOT -eq 28 ]];
+then   printf "  $PASS\n"; else   printf "$FAIL: expecting 14 sequence, $TOT found"; fi
+
+echo " 2. Testing streaming I/O"
+
+TOT=$($BIN -io $DATA/illumina_?.* | $BIN -io -i 2>/dev/null | grep '^@A00'  | wc -l )
+if [[ $TOT -eq 28 ]];
+then   printf "  $PASS\n"; else   printf "$FAIL: expecting 14 sequence, $TOT found"; fi

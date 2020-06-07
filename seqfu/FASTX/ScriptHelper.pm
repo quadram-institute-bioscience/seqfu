@@ -342,6 +342,23 @@ sub run  {
 
 }
 
+=head2 cpu_count
+
+Returns the number of detected cores, default 1
+
+=cut
+
+sub cpu_count {
+  if ( $^O =~ m/linux/i ) {
+    my($num) = qx(grep -c ^processor /proc/cpuinfo);
+    return $1 if $num =~ m/^(\d+)/;
+  }
+  elsif ( $^O =~ m/darwin/i ) {
+    my($num) = qx(system_profiler SPHardwareDataType | grep Cores);
+    return $1 if $num =~ /.*Cores: (\d+)/;
+  }
+  return 1;
+}
 
 sub _getTimeStamp {
 

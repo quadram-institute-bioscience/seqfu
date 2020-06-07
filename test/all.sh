@@ -92,7 +92,7 @@ echo ''
 for i in $TEST_DIR/test_*.sh;
 do
 	UNIT=$(basename $i | cut -f2 -d_ | cut -f1 -d.);
-	printf "\e[32m *  Now testing: \e[1m$UNIT\e[0m\n"
+	printf "\e[32m =====  Now testing: \e[1m$UNIT\e[0m\n"
 	echo " ======================================"
 	source $i
 done

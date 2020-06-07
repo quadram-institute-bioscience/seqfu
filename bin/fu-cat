@@ -9,14 +9,14 @@ use File::Basename;
 use FindBin qw($RealBin);
 #        Repository            Conda
 use lib  "$RealBin/../seqfu/", "$RealBin/seqfu/";
-
+use Digest::MD5 qw(md5_base64);
 use FASTX::Reader;
 use Local::SeqFu;
 
 my $PROGRAM = basename($0);
 my $VERSION = $Local::SeqFu::VERSION;
 my ($opt_force_fasta, $opt_force_fastq, $opt_upper, $opt_help, $opt_verbose, $opt_version);
-my ($opt_minlen, $opt_maxlen);
+my ($opt_minlen, $opt_maxlen, $opt_dereplicate, $opt_rename_md5);
 my $opt_separator = '.';
 my $opt_rename_string;
 my $opt_line_size = $Local::SeqFu::fu_linesize;
@@ -24,6 +24,8 @@ my $opt_line_size = $Local::SeqFu::fu_linesize;
 if (!GetOptions(
     'f|fasta'       => \$opt_force_fasta,
     'q|fastq'       => \$opt_force_fastq,
+    'd|dereplicate' => \$opt_dereplicate,
+    '5|rename-md5'  => \$opt_rename_md5,
     'r|rename=s'    => \$opt_rename_string,
     's|separator=s' => \$opt_separator,
     'w|width=i'     => \$opt_line_size,
@@ -53,7 +55,10 @@ if ($opt_version) {
 }
 
 # Print man (help)
-pod2usage({-exitval => 0, -verbose => 2}) if $opt_help;
+pod2usage(
+ {-exitval => 0, -verbose => 2}
+) if $opt_help;
+
 # Read from STDIN
 if (not defined $ARGV[0]) {
     # Read from STDIN but also print a help message
@@ -91,19 +96,23 @@ if (not $opt_force_fasta and not $opt_force_fastq){
 }
 
 
-my %printed_seqs = ();
-
+my %printed_seq_names = ();
+my %printed_seqs      = ();
 
 # Process all the files
 for my $filename (@ARGV) {
     $filename = '{{STDIN}}' if ($filename eq '-');
     my $reader = FASTX::Reader->new({ filename => "$filename"});
     while (my $s = $reader->getRead() ) {
+
+
+        # Duplicate name finder
         my $name = $s->{name};
-        if ($printed_seqs{ $s->{name} }) {
-            $name .= $opt_separator . $printed_seqs{ $s->{name} };
+        if ($printed_seq_names{ $s->{name} }) {
+            $name .= $opt_separator . $printed_seq_names{ $s->{name} };
         }
-        $printed_seqs{ $s->{name} }++;
+        $printed_seq_names{ $s->{name} }++;
+
 
         # Skip short sequences
         if (defined $opt_minlen and length($s->{seq} < $opt_minlen)) {
@@ -113,6 +122,14 @@ for my $filename (@ARGV) {
         if (defined $opt_maxlen and length($s->{seq} > $opt_maxlen)) {
             next;
         }
+
+        if ($opt_dereplicate) {
+          my $seq_sum = md5_base64($s->{seq});
+          $printed_seqs{$seq_sum}++;
+          next if ($printed_seqs{$seq_sum} > 1);
+          $name = $seq_sum if ($opt_rename_md5);
+        }
+
 
         # Print seq
         if ($opt_force_fasta) {
@@ -190,6 +207,18 @@ Force FASTA output
 
 Force FASTQ output. Will B<not> print any sequence without quality
 (they will be skipped)
+
+
+=item I<-d>, I<--dereplicate>
+
+Print each sequence only only once
+
+
+=item I<-5>, I<--rename-md5>
+
+(use with -d) rename each sequence name with the MD5sum of the sequence.
+
+
 
 =item I<-l>, I<--minlen> INT
 

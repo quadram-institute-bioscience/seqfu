@@ -4,7 +4,8 @@ use 5.012;
 use warnings;
 use Getopt::Long;
 use FindBin qw($RealBin);
-use lib  "$RealBin/../seqfu/", "$RealBin/seqfu/", "$RealBin/../lib/perl5",  "$RealBin/lib"; 
+#        Repository            Conda
+use lib  "$RealBin/../seqfu/", "$RealBin/seqfu/", "$RealBin/../lib/perl5",  "$RealBin/lib";
 
 use FASTX::Reader;
 use File::Basename;
@@ -24,7 +25,8 @@ my $_opt          = GetOptions(
 	's|separator=s' => \$opt_separator,
 	'f|fasta'       => \$opt_fasta,
 	'v|verbose'     => \$opt_verbose,
-	'd|debug'		=> \$opt_debug,
+	'n|nocomments'  => \$opt_nocomm,
+	'd|debug'		    => \$opt_debug,
 );
 
 my $total_seqs = 0;
@@ -42,7 +44,7 @@ for my $file (@ARGV) {
 	# Prepare {b} or {B}
 	my $basename = basename($file);
 	$basename =~s/\.\w+\.?g?z?$// if ($opt_prefix =~/{b}/);
-	
+
 	while (my $seq = $reader->getRead() ) {
 		$seqs++;
 		$total_seqs++;
@@ -50,7 +52,7 @@ for my $file (@ARGV) {
 		# Prepare prefix
 		my $seqname = $opt_prefix;
 		$seqname =~s/\{[bB]\}/$basename/;
-		
+
 		if (index($seqname, $opt_separator) != -1) {
 			$warnings++;
 			say STDERR " [WARNING!] The prefix <$seqname> contains the separator <$opt_separator>!";
@@ -68,7 +70,7 @@ for my $file (@ARGV) {
 		my $comments = '';
 		$comments .= " ".$seq->{comment} if (defined $seq->{comment} and not $opt_nocomm);
 		if ($seq->{qual} and not $opt_fasta) {
-			
+
 
 			say '@', $seqname, $comments, "\n", $seq->{seq}, "\n+\n", $seq->{qual};
 		} else {
@@ -78,7 +80,7 @@ for my $file (@ARGV) {
 	}
 }
 
-say STDERR "$warnings warnings emitted";
+say STDERR "$warnings warnings emitted" if ($warnings);
 
 
 sub usage {

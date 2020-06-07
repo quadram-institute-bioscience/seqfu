@@ -7,7 +7,7 @@ use Getopt::Long;
 use Pod::Usage;
 use File::Basename;
 use FindBin qw($RealBin);
-use lib  "$RealBin/../seqfu/", "$RealBin/seqfu/", "$RealBin/../lib/perl5",  "$RealBin/lib"; 
+use lib  "$RealBin/../seqfu/", "$RealBin/seqfu/", "$RealBin/../lib/perl5",  "$RealBin/lib";
 
 use FASTX::PE;
 use Local::SeqFu;
@@ -43,8 +43,8 @@ if (!GetOptions(
     'version'               => \$opt_version,
     'verbose'               => \$opt_verbose,
     'help'                  => \$opt_help,
-)) { 
-        say STDERR "Wrong parameters: type $PROGRAM --help for full documentation."; 
+)) {
+        say STDERR "Wrong parameters: type $PROGRAM --help for full documentation.";
         exit 1  ;
 }
 
@@ -62,7 +62,7 @@ if ($opt_version) {
 # Print man (help)
 pod2usage({-exitval => 0, -verbose => 2}) if $opt_help;
 
-# Read STDIN (interleave) 
+# Read STDIN (interleave)
 if (!  $ARGV[0] ) {
     usage();
     say STDERR " Reading from STDIN... [Ctrl-C to exit]";
@@ -77,7 +77,7 @@ my $ofh2;
 if ($opt_interleaved_output) {
     # INTERLEAVED OUTPUT
     if ($opt_out_1) {
-      open ($ofh1, '>', "$opt_out_1") || die " FATAL ERROR: Unable to write R1 to <$opt_out_basename>\n";  
+      open ($ofh1, '>', "$opt_out_1") || die " FATAL ERROR: Unable to write R1 to <$opt_out_basename>\n";
     } else {
         verbose("No output file provided: assuming interleaved STDOUT");
         $ofh1 = *STDOUT;
@@ -93,7 +93,7 @@ if ($opt_interleaved_output) {
     open ($ofh2, '>', "$opt_out_2") || die " FATAL ERROR: Unable to write R2 to <$opt_out_2>\n";
 } elsif ($opt_out_basename) {
     open ($ofh1, '>', "$opt_out_basename$opt_tag1$opt_ext") || die " FATAL ERROR: Unable to write R1 to <$opt_out_basename$opt_tag1$opt_ext>\n";
-    open ($ofh2, '>', "$opt_out_basename$opt_tag2$opt_ext") || die " FATAL ERROR: Unable to write R2 to <$opt_out_basename$opt_tag2$opt_ext>\n";   
+    open ($ofh2, '>', "$opt_out_basename$opt_tag2$opt_ext") || die " FATAL ERROR: Unable to write R2 to <$opt_out_basename$opt_tag2$opt_ext>\n";
 } else {
     usage();
     die " ERROR: Please specify either output basename (-o) or individual files (-o1 and -o2)\n";
@@ -120,10 +120,10 @@ for my $filename (@ARGV) {
 
     my $reader;
     eval {
-      $reader = FASTX::PE->new({ 
+      $reader = FASTX::PE->new({
             filename => "$filename",
             interleaved => $opt_interleaved_input,
-        }); 
+        });
     };
 
 
@@ -132,7 +132,7 @@ for my $filename (@ARGV) {
         next;
     }
     verbose("Parsing \"$filename\"");
-    
+
     if ($opt_prefix) {
         $prefix = $opt_prefix;
         my ($basename) = split /\./,  basename($filename);
@@ -146,39 +146,39 @@ for my $filename (@ARGV) {
         if ($opt_minlen) {
             next if (lengt( $s->{seq1} ) < $opt_minlen);
             next if (lengt( $s->{seq2} ) < $opt_minlen);
-        }       
+        }
         if ($printed_seqs{ $s->{name} }) {
             $name .= $opt_separator . $printed_seqs{ $s->{name} };
-        } 
+        }
         $printed_seqs{ $s->{name} }++;
-        
+
         my $comment1 = '';
         my $comment2 = '';
         if ($opt_upper) {
              $s->{seq1} = uc( $s->{seq1} );
-             $s->{seq2} = uc( $s->{seq2} ); 
+             $s->{seq2} = uc( $s->{seq2} );
         }
         $comment1 = ' ' . $s->{comment1} if (defined $s->{comment1} and not $opt_strip_comments);
         $comment2 = ' ' . $s->{comment2} if (defined $s->{comment2} and not $opt_strip_comments);
 
 
         if ($opt_interleaved_output) {
-            
+
             say {$ofh1} '@', $s->{name}, $comment1, "\n", $s->{seq1}, "\n+\n", $s->{qual1}, "\n",
                         '@', $s->{name}, $comment2, "\n", $s->{seq2}, "\n+\n", $s->{qual2};
         } else {
-            
+
             say {$ofh1} '@', $s->{name}, $comment1, "\n", $s->{seq1}, "\n+\n", $s->{qual1};
             say {$ofh2} '@', $s->{name}, $comment2, "\n", $s->{seq2}, "\n+\n", $s->{qual2};
         }
         $counter++;
-        
+
     }
     if ($reader->{error}) {
         say STDERR "[WARNING] Paired end set $filename error:\n $reader->{error}.\n $counter pairs printed.";
-    } 
+    }
     verbose("$filename\t$counter reads");
-    
+
     $parsed_files{$reader->{rev}}++;
 }
 
@@ -217,8 +217,8 @@ This program parses a list of FASTA/FASTQ and will concatenate them
 ensuring consistent output. Will rename duplicate sequence names.
 Will try to autodetect the format of all files before executing and
 decide accordingly the output format (FASTA if at least one of the
-files is FASTA, otherwise FASTQ). If reading from STDIN the first 
-sequence is in FASTQ format, will skip all the sequences without a 
+files is FASTA, otherwise FASTQ). If reading from STDIN the first
+sequence is in FASTQ format, will skip all the sequences without a
 quality string.
 
 If no files are provided the program will try reading from STDIN,
@@ -241,7 +241,7 @@ Force FASTA output
 
 =item I<-q>, I<--fastq>
 
-Force FASTQ output. Will B<not> print any sequence without quality 
+Force FASTQ output. Will B<not> print any sequence without quality
 (they will be skipped)
 
 =item I<-u>, I<--uppercase>

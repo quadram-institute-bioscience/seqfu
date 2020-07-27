@@ -11,7 +11,7 @@ install:
   - conda update -q conda
   - conda info -a
 
-  - conda create -q -n test-environment  -y -c conda-forge -c bioconda perl  n50 interleafq any2fasta
+  - conda create -q -n test-environment  -y -c conda-forge -c bioconda perl  n50 interleafq any2fasta perl-biox-seq
   - conda activate test-environment
 
 script:

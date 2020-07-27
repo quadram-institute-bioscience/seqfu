@@ -5,7 +5,7 @@ use warnings;
 use Getopt::Long;
 use FindBin qw($RealBin);
 
-use lib  "$RealBin/../seqfu/", "$RealBin/seqfu/", "$RealBin/../lib/perl5",  "$RealBin/lib"; 
+use lib  "$RealBin/../seqfu/", "$RealBin/seqfu/", "$RealBin/../lib/perl5",  "$RealBin/lib";
 
 use FASTX::Reader;
 use File::Basename;
@@ -23,10 +23,10 @@ my $_opt          = GetOptions(
 	'a|annotate'    => \$opt_annotate,
 	's|stranded'    => \$opt_stranded,
 	'n|name'        => \$opt_search_in_name,
-	'c|comment'     => \$opt_search_in_comm, 
+	'c|comment'     => \$opt_search_in_comm,
 	'f|fasta'       => \$opt_fasta,
 	'v|verbose'     => \$opt_verbose,
-	'cs|comment-separator=s' 
+	'cs|comment-separator=s'
 	                => \$opt_comment_separator,
 	'd|debug'		=> \$opt_debug,
 );
@@ -57,7 +57,7 @@ for my $file (@ARGV) {
 	# Prepare {b} or {B}
 	my $basename = basename($file);
 	$basename =~s/\.\w+\.?g?z?$//;
-	
+
 	my $annotation = '';
 	while (my $seq = $reader->getRead() ) {
 		my $print = 0;
@@ -66,12 +66,12 @@ for my $file (@ARGV) {
 
 		if ($opt_search_in_comm) {
 			# search in comments
-			next if not defined $seq->{comments};
-			$print++ if ($seq->{comments} =~/$regex/i); 
+			next if not defined $seq->{comment};
+			$print++ if ($seq->{comment} =~/$regex/i); 
 
 		} elsif ($opt_search_in_name) {
 			# search in sequence name
-			$print++ if ($seq->{name} =~/$regex/i); 
+			$print++ if ($seq->{name} =~/$regex/i);
 		} else {
 			# search in DNA sequence
 			if ($seq->{seq} =~/$regex/i) {
@@ -93,7 +93,7 @@ for my $file (@ARGV) {
 
 					$annotation = "\t#matches=$matches;";
 					$annotation .= "for=$pattern:$for;rev=$rc:$rev" if not defined $opt_stranded;
-				} 
+				}
 			}
 		}
 
@@ -120,7 +120,7 @@ sub usage {
   -a, --annotate
      Add comments to the sequence when match is found
 
-  -n, --name 
+  -n, --name
      Search pattern in sequence name (default: sequence)
 
   -c, --comments

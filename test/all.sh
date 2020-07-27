@@ -20,8 +20,9 @@ chmod +x "$SCRIPTS"/*
 if [ ! -e "$INPUT" ]; then
 	echo "Input file ($INPUT) not found"
 fi
-
-set -x pipefail
+if [[ "NO" != "NO$DEBUG" ]]; then
+  set -x pipefail
+fi
 
 $SCRIPTS/fu-len      -m 150 -x 170 $INPUT
 $SCRIPTS/fu-grep   GGGGGGGGGGGGGGG $INPUT

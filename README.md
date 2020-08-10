@@ -10,9 +10,9 @@
 
 A collection of Sequence FASTX Utilities, partly shipped with this repository and partly coming from external sources.
 
-See [the documentation wiki](https://github.com/quadram-institute-bioscience/seqfu/wiki).
+### See [the documentation wiki](https://github.com/quadram-institute-bioscience/seqfu/wiki).
 
 
-:warning: Alpha release - only two tools are stable
+:warning: This is an unstable release - only two tools have a stable interface
  * n50 `conda install -c bioconda n50`
  * interleafq `conda install -c bioconda interleafq`

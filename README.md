@@ -1,18 +1,36 @@
- 
-<img alt="seqfu logo" align="right" width="150" height="150" src="https://github.com/quadram-institute-bioscience/seqfu/raw/master/docs/seqfu-logo-small.png">
+# FASTA/FASTQ Dereplication
 
-# seqfu
+![Commit](https://img.shields.io/github/last-commit/telatin/nim-stuff)
+![Version 0.4.0](https://img.shields.io/badge/version-0.4.0-blue)
 
-[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/seqfu/README.html)
-[![downloads](https://img.shields.io/conda/dn/bioconda/seqfu)](https://anaconda.org/bioconda/seqfu)
-[![version](https://img.shields.io/conda/vn/bioconda/seqfu?label=seqfu)](https://anaconda.org/bioconda/seqfu)
-[![Build Status](https://travis-ci.org/quadram-institute-bioscience/seqfu.svg?branch=master)](https://travis-ci.org/quadram-institute-bioscience/seqfu)
+Manipulation of FASTA/FASTQ files
 
-A collection of Sequence FASTX Utilities, partly shipped with this repository and partly coming from external sources.
+```
 
-### See [the documentation wiki](https://github.com/quadram-institute-bioscience/seqfu/wiki).
+```
 
+## Some functions
+### seqfu head
 
-:warning: This is an unstable release - only two tools have a stable interface
- * n50 `conda install -c bioconda n50`
- * interleafq `conda install -c bioconda interleafq`
+```
+````
+### seqfu interleave
+
+```
+````
+### seqfu deinterleave
+
+```
+````
+### seqfu derep
+
+```
+````
+### seqfu stats
+
+```
+````
+### seqfu count
+
+```
+````

@@ -419,23 +419,29 @@ sub getFileFormat {
   my $self   = shift;
   my ($filename) = shift;
   return 0 if (not defined $filename);
-  
-  open my $fh, '<', $filename or confess "Unable to read file ", $filename, "\n";
-  read( $fh, my $magic_byte, 4 );
-  close $fh;
+  my $is_ascii = -T "$filename" ? 1 : 0;
+ 
+  my $fh;
+  if (! $is_ascii) {
 
-  if (substr($magic_byte,0,3) eq GZIP_SIGNATURE) {
-   
-    if (! defined $self->{GZIP_BIN}) {
-      require IO::Uncompress::Gunzip;
-      $fh = IO::Uncompress::Gunzip->new($filename, MultiStream => 1);
+    open my $fh, '<', $filename or confess "Unable to read file ", $filename, "\n";
+    read( $fh, my $magic_byte, 4 );
+    seek($fh,0,0);
+    if (substr($magic_byte,0,3) eq GZIP_SIGNATURE) {  
+
+        if (! defined $self->{GZIP_BIN}) {
+          require IO::Uncompress::Gunzip;
+          $fh = IO::Uncompress::Gunzip->new($filename, MultiStream => 1);
+        } else {
+    	    open  $fh, '-|', "$self->{GZIP_BIN} -dc $filename" or confess "Error opening gzip file ", $filename, ": $!\n";
+        }
     } else {
-	    open  $fh, '-|', "$self->{GZIP_BIN} -dc $filename" or confess "Error opening gzip file ", $filename, ": $!\n";
+      confess "Input file is not ASCII or gzipped: $filename";
+      #open  $fh, '<:encoding(utf8)', "$filename" || confess "Unable to read $filename\n$!\n";
     }
-  } else {
-    open  $fh, '<:encoding(utf8)', "$filename" || confess "Unable to read $filename\n$!\n";
   }
   my $first = readline($fh);
+
   if (substr($first, 0,1) eq '>') {
     #should be FASTA
     return 'fasta';

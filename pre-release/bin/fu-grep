@@ -67,7 +67,7 @@ for my $file (@ARGV) {
 		if ($opt_search_in_comm) {
 			# search in comments
 			next if not defined $seq->{comment};
-			$print++ if ($seq->{comment} =~/$regex/i); 
+			$print++ if ($seq->{comment} =~/$regex/i);
 
 		} elsif ($opt_search_in_name) {
 			# search in sequence name
@@ -91,7 +91,7 @@ for my $file (@ARGV) {
 						}
 					}
 
-					$annotation = "\t#matches=$matches;";
+					$annotation = "$opt_comment_separator#matches=$matches;";
 					$annotation .= "for=$pattern:$for;rev=$rc:$rev" if not defined $opt_stranded;
 				}
 			}

@@ -3,6 +3,7 @@
 # PODNAME: fu-cat
 
 use 5.012;
+use warnings FATAL => 'all';
 use Getopt::Long;
 use Pod::Usage;
 use File::Basename;

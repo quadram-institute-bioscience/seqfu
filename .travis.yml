@@ -1,19 +1,8 @@
-language: python
-python:
-  - "3.6"
-install:
-  - sudo apt-get update
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - source "$HOME/miniconda/etc/profile.d/conda.sh"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-  - conda info -a
-
-  - conda create -q -n test-environment  -y -c conda-forge -c bioconda perl  n50 interleafq any2fasta perl-biox-seq
-  - conda activate test-environment
-
+sudo: required
+services:
+  - docker
+before_install:
+  - docker pull nimlang/nim
 script:
-  # Your test script goes here
-  - bash test/all.sh
+  - docker run nimlang/nim nim --version
+  - docker run -v "$(pwd):/project" -w /project nimlang/nim sh -c "nimble seqfu"

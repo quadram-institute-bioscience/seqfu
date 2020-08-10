@@ -12,8 +12,4 @@ bin = @["seqfu"]
 
 task seqfu, "compile SeqFU":
   mkdir  "bin"
-  exec "nimble c -d:release  --opt:speed -p:lib/ --out:bin/seqfu src/sfu"
-
-task makedebug, "compile SeqFU":
-  mkdir  "bin"
-  exec "nimble c -p:lib/ --out:bin/seqfu_debug src/sfu"
+  exec "nimble c  --opt:speed -p:lib/ --out:bin/seqfu src/sfu"

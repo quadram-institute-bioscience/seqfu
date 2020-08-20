@@ -3,11 +3,15 @@ import re
 import argparse
 import tables, strutils
 import stats
+import strformat
 from os import fileExists
 
 const prog = "fu-cov"
-const version = "0.1.0"
+const version = "0.2.0"
+
+# Chars in numbers (floating)
 let nums = @['0','1','2','3','4','5','6','7','8','9','0','.']
+# Coverage strings in assembly outputs (spades, unicycler, megahit, shovill, skesa)
 let prefixes = @["cov=", "multi=", "cov_", "depth="]
 
 var
@@ -17,6 +21,7 @@ var
 #[
    extract contigs by coverage
 
+  0.2   Added statistics
 ]#
 
 proc verbose(msg: string, print: bool) =
@@ -45,8 +50,7 @@ var p = newParser(prog):
   arg("inputfile",  nargs = -1)
  
 proc getNumberAfterPos(s: string, pos: int): float =
-  var ans = ""
-  
+  var ans = ""  
   for i in pos .. s.high:
     if s[i] notin nums:
       break
@@ -60,6 +64,7 @@ proc getCovFromString(s: string): float =
         break
       if s[i ..< i + len(prefix)] == prefix:
         return getNumberAfterPos(s, i + len(prefix))
+  return -1
 
 
 
@@ -78,7 +83,10 @@ proc main(args: seq[string]) =
       if not opts.help:
         echo "Type --help for more info."
       quit(0)
-    
+
+    var
+      c = 0       # total count of sequences
+      pf = 0      # passing filters    
     for filename in opts.inputfile:      
       if not existsFile(filename):
         echo "FATAL ERROR: File ", filename, " not found."
@@ -91,9 +99,7 @@ proc main(args: seq[string]) =
 
       # Prse FASTX
       var match: array[1, string]
-      var
-        c = 0       # total count of sequences
-        pf = 0      # passing filters
+
 
       while f.readFastx(r):
         c+=1
@@ -108,7 +114,8 @@ proc main(args: seq[string]) =
         lenStats.push(len(r.seq))
         if opts.min_cov != "0.0" or opts.max_cov != "0.0":
           var cov = getCovFromString(r.name & " " & r.comment)
-          covStats.push(cov)
+          if cov >= 0:
+            covStats.push(cov)
           if opts.min_cov != "0.0" and cov < parseFloat(opts.min_cov):
             skip_lo_cov += 1
             continue
@@ -119,11 +126,11 @@ proc main(args: seq[string]) =
         pf += 1
         echo ">", r.name, " ", r.comment, "\n", r.seq;
       
-      stderr.writeLine(pf, "/", c, " sequences printed (", covStats.n ," with coverage info).")
-      stderr.writeLine("Discarded: ", skip_lo_cov, " low coverage, ", skip_hi_cov, " high coverage, ", skip_short, " too short, ", skip_long, " too long.")
-      stderr.writeLine("Average length: ", lenStats.mean(), " bp. (", lenStats.min, "-", lenStats.max, ")",
-        "\nAverage coverage ", covStats.mean(), "X, (", covStats.min, "-", covStats.max, ")")
-       
+      stderr.writeLine(pf, "/", lenStats.n, " sequences printed (", covStats.n ," with coverage info).")
+      stderr.writeLine(fmt"Discarded:        {skip_lo_cov} low coverage, {skip_hi_cov} high coverage, {skip_short} too short, {skip_long} too long.")
+      stderr.writeLine(fmt"Average length:   {lenStats.mean():.2f} bp, [{lenStats.min} - {lenStats.max}]")
+      if covStats.n > 0:
+        stderr.writeLine(fmt"Average coverage: {covStats.mean():.2f}X, [{covStats.min:.1f}-{covStats.max:.1f}]")
   except:
     echo p.help
     stderr.writeLine("Arguments error: ", getCurrentExceptionMsg())

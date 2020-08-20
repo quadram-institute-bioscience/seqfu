@@ -4,6 +4,7 @@ import strutils
 import tables
 import algorithm
 import docopt
+#import nimprof
 
 # Suite Version
 import ./seqfu_utils
@@ -18,6 +19,7 @@ include ./fastx_head
 include ./fastx_tail
 include ./fastx_stats
 include ./fastx_sort
+#include ./fastx_fast_derep
 
 
 
@@ -26,6 +28,7 @@ var progs = {
        "ilv": fastq_interleave,       "interleave": fastq_interleave,
        "dei": fastq_deinterleave,     "deinterleave": fastq_deinterleave,  
        "der": fastx_derep,            "derep": fastx_derep,
+#       "uniq": fastx_fast_derep,      "fast_derep": fastx_fast_derep,
        "cnt": fastx_count,            "count": fastx_count, 
        "st" : fastx_stats,            "stats": fastx_stats,
        "srt": fastx_sort,             "sort" : fastx_sort,
@@ -40,7 +43,8 @@ proc main() =
   var 
     helps = {  "interleave [ilv]"  :  "interleave FASTQ pair ends",
                "deinterleave [dei]": "deinterleave FASTQ",
-               "derep [der]"       : "dereplicate FASTA/FASTQ files",
+               "derep [der]"       : "feature-rich dereplication of FASTA/FASTQ files",
+#               "fast_derep [uniq]" : "fast dereplication of FASTA/FASTQ files",
                "count [cnt]"       : "count FASTA/FASTQ reads, pair-end aware",
                "merge [mrg]"       : "merge Illumina lanes",
                "stats [st]"        : "statistics on sequence lengths",

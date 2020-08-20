@@ -1,5 +1,7 @@
 import klib
 import re
+import md5
+import json
 import tables, strutils
 from os import fileExists
 import docopt
@@ -17,19 +19,20 @@ proc fastx_derep(argv: var seq[string]): int =
     let args = docopt("""
 Usage: derep [options] [<inputfile> ...]
 
-
 Options:
   -k, --keep-name              Do not rename sequence, but use the first sequence name
   -i, --ignore-size            Do not count 'size=INT;' annotations (they will be stripped in any case)
-  -v, --verbose                Print verbose messages
   -m, --min-size=MIN_SIZE      Print clusters with size equal or bigger than INT sequences [default: 0]
   -p, --prefix=PREFIX          Sequence name prefix [default: seq]
+  -5, --md5                    Use MD5 as sequence name (overrides other parameters)
+  -j, --json=JSON_FILE         Save dereplication metadata to JSON file
   -s, --separator=SEPARATOR    Sequence name separator [default: .]
   -w, --line-width=LINE_WIDTH  FASTA line width (0: unlimited) [default: 0]
   -l, --min-length=MIN_LENGTH  Discard sequences shorter than MIN_LEN [default: 0]
   -x, --max-length=MAX_LENGTH  Discard sequences longer than MAX_LEN [default: 0]
-  --add-len                    Add length to sequence
   -c, --size-as-comment        Print cluster size as comment, not in sequence name
+  --add-len                    Add length to sequence
+  -v, --verbose                Print verbose messages
   -h, --help                   Show this help
 
   
@@ -41,15 +44,29 @@ Options:
       sizePattern = re";?size=(\d+);?"
       sizeCapture = re".*;?size=(\d+);?.*"
       addLength = args["--add-len"]
+      useHash   = args["--md5"]
+      useJson   = if $args["--json"] == "nil" : false 
+                  else: true
+      jsonFile  = if $args["--json"] == "nil" : "" 
+                  else: $args["--json"]
+      lineWidth = parseInt($args["--line-width"])
 
-    var size_separator = if args["--size-as-comment"] : " " 
+
+
+    var size_separator = if args["--size-as-comment"] or useHash : " " 
                else: ";"
     var 
+      keepName = if args["--keep-name"]: true
+                  else: false
       seqFreqs = initCountTable[string]()
       seqNames = initTable[string, string]()
+      seqFiles = initTable[string, seq[string]]()
       files    : seq[string]
-
-   
+      total    = 0
+ 
+        
+    if useHash:
+      keepName = true
     
     if args["<inputfile>"].len() == 0:
       stderr.writeLine("Waiting for STDIN... [Ctrl-C to quit, type with --help for info].")
@@ -59,7 +76,6 @@ Options:
         files.add(file)
 
 
-    
     for filename in files:      
       if filename != "-" and not existsFile(filename):
         echo "FATAL ERROR: File ", filename, " not found."
@@ -80,16 +96,35 @@ Options:
       while f.readFastx(r):
         c+=1
 
+        # Always consider uppercase sequences
+        r.seq = toUpperAscii(r.seq)
+
+        # Discard short and long sequences
         if $args["--min-length"] != "0" and len(r.seq) < parseInt($args["--min-length"]):
           continue
         if $args["--max-length"] != "0" and len(r.seq) > parseInt($args["--max-length"]):
           continue
         
-        if args["--keep-name"]:
+        # Store first name in seqNames
+        if keepName:
           var seqname = r.name
+          
           if seqFreqs[r.seq] == 0:
-            seqNames[r.seq] = seqname.replace(sizePattern, "")
+            if useHash:
+              seqNames[r.seq] = getMD5(r.seq)
+              seqFiles[ getMD5(r.seq) ] = @[filename & ":" & r.name]
+            else:
+              seqNames[r.seq] = seqname.replace(sizePattern, "")
+          else:
+            seqFiles[ getMD5(r.seq) ].add(filename & ":" & r.name)
+
+        # Json metadata
+        #if useJson:
+        #  echo "OK"
+      
+        # Calculate size
         if not args["--ignore-size"]:
+          # consider size=XX as count (otherwise: 1)
           if match(r.name, sizeCapture, match):
             seqFreqs.inc(r.seq, parseInt(match[0]))
           elif match(r.comment, sizeCapture, match):
@@ -98,7 +133,11 @@ Options:
             seqFreqs.inc(r.seq)
         else:
           seqFreqs.inc(r.seq)
+
+      total += c
       echoVerbose("\tParsed " & $(c) & " sequences", args["--verbose"])
+
+    
     var n = 0
     seqFreqs.sort()
 
@@ -106,7 +145,7 @@ Options:
       n += 1
       # Generate name
       var name: string
-      if args["--keep-name"]:
+      if keepName:
         name = seqNames[repSeq]
       else:
         name = $args["--prefix"] & $args["--separator"] & $(n)
@@ -119,5 +158,7 @@ Options:
 
       if addLength:
         name.add(";len=" & $len(repSeq))
-      echo ">", name,  "\n", format_dna(repSeq, parseInt($args["--line-width"]));
- 
+      echo ">", name,  "\n", format_dna(repSeq, lineWidth)
+
+    echoVerbose($(n) & " representative sequences out of " & $(total) & " initial sequences.", args["--verbose"])
+    echo pretty(%*seqFiles)

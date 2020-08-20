@@ -85,8 +85,9 @@ proc main(args: seq[string]) =
       quit(0)
 
     var
-      c = 0       # total count of sequences
-      pf = 0      # passing filters    
+      c  = 0      # total count of sequences
+      pf = 0      # passing filters 
+      ff = 0      # parsed files 
     for filename in opts.inputfile:      
       if not existsFile(filename):
         echo "FATAL ERROR: File ", filename, " not found."
@@ -96,7 +97,7 @@ proc main(args: seq[string]) =
       defer: f.close()
       var r: FastxRecord
       verbose("Reading " & filename, opts.verbose)
-
+      ff += 1
       # Prse FASTX
       var match: array[1, string]
 
@@ -126,8 +127,8 @@ proc main(args: seq[string]) =
         pf += 1
         echo ">", r.name, " ", r.comment, "\n", r.seq;
       
-    stderr.writeLine(pf, "/", lenStats.n, " sequences printed (", covStats.n ," with coverage info).")
-    stderr.writeLine(fmt"Discarded:        {skip_lo_cov} low coverage, {skip_hi_cov} high coverage, {skip_short} too short, {skip_long} too long.")
+    stderr.writeLine(pf, "/", lenStats.n, " sequences printed (", covStats.n ," with coverage info) from ", ff , " files.")
+    stderr.writeLine(fmt"Skipped:          {skip_lo_cov} low coverage, {skip_hi_cov} high coverage, {skip_short} too short, {skip_long} too long.")
     stderr.writeLine(fmt"Average length:   {lenStats.mean():.2f} bp, [{lenStats.min} - {lenStats.max}]")
     if covStats.n > 0:
       stderr.writeLine(fmt"Average coverage: {covStats.mean():.2f}X, [{covStats.min:.1f}-{covStats.max:.1f}]")

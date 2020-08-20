@@ -1,12 +1,12 @@
->SEQ1_BamHI-EcoRI len=65
+>SEQ1_BamHI-EcoRI len=67 cov=120
 acagcgtacgtgatcgac
 gtagctagctgacgagct
 agctacacacgatcgtag
 ctggtacacgt
->Seq2 len=32
+>Seq2 len=32 cov=12
 acacacacacacacacac
 acacacacacacac
->Seq3 len=21
+>Seq3 len=21 cov=0.3
 cccccccccccccccccc
 ccc
 

@@ -17,7 +17,7 @@ if [ "${NIM_RELEASE+x}" ]; then
 fi
 
 nim c -w:on --opt:speed $RELEASE -p:$DIR/../lib -o:$DIR/../bin/seqfu${PLATFORM} $DIR/sfu.nim || { echo "Compilation failed."; exit 1; }
-
+nim c -w:on --opt:speed $RELEASE -p:$DIR/../lib -o:$DIR/../bin/fu-cov${PLATFORM} src/fu_cov.nim || { echo "fu-cov failed.";   exit 2; }
 bash $DIR/../test/mini.sh
 
 

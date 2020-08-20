@@ -9,4 +9,5 @@ acacacacacacac
 >Seq3 len=21 cov=0.3
 cccccccccccccccccc
 ccc
-
+>Seq10 len=10 cov=1000.0
+ACGTacgtNN

@@ -2,10 +2,18 @@ import klib
 import re
 import argparse
 import tables, strutils
+import stats
 from os import fileExists
 
 const prog = "fu-cov"
 const version = "0.1.0"
+let nums = @['0','1','2','3','4','5','6','7','8','9','0','.']
+let prefixes = @["cov=", "multi=", "cov_", "depth="]
+
+var
+  covStats: RunningStat
+  lenStats: RunningStat
+
 #[
    extract contigs by coverage
 
@@ -38,7 +46,7 @@ var p = newParser(prog):
  
 proc getNumberAfterPos(s: string, pos: int): float =
   var ans = ""
-  let nums = @['0','1','2','3','4','5','6','7','8','9','0','.']
+  
   for i in pos .. s.high:
     if s[i] notin nums:
       break
@@ -46,7 +54,6 @@ proc getNumberAfterPos(s: string, pos: int): float =
   return parseFloat(ans)
 
 proc getCovFromString(s: string): float =
-  let prefixes = @["cov=", "multi=", "cov_"]
   for i in 0 .. s.high:
     for prefix in prefixes:
       if i + len(prefix) >= s.high:
@@ -84,12 +91,12 @@ proc main(args: seq[string]) =
 
       # Prse FASTX
       var match: array[1, string]
-      var c = 0
+      var
+        c = 0       # total count of sequences
+        pf = 0      # passing filters
 
       while f.readFastx(r):
         c+=1
-        # Always consider uppercase sequences
-        r.seq = toUpperAscii(r.seq)
 
         if opts.min_len != "0" and len(r.seq) < parseInt(opts.min_len):
           skip_short += 1
@@ -98,16 +105,24 @@ proc main(args: seq[string]) =
           skip_long += 1
           continue
         
+        lenStats.push(len(r.seq))
         if opts.min_cov != "0.0" or opts.max_cov != "0.0":
           var cov = getCovFromString(r.name & " " & r.comment)
+          covStats.push(cov)
           if opts.min_cov != "0.0" and cov < parseFloat(opts.min_cov):
             skip_lo_cov += 1
             continue
           if opts.max_cov != "0.0" and cov > parseFloat(opts.max_cov):
             skip_hi_cov += 1
             continue
-
+        
+        pf += 1
         echo ">", r.name, " ", r.comment, "\n", r.seq;
+      
+      stderr.writeLine(pf, "/", c, " sequences printed (", covStats.n ," with coverage info).")
+      stderr.writeLine("Discarded: ", skip_lo_cov, " low coverage, ", skip_hi_cov, " high coverage, ", skip_short, " too short, ", skip_long, " too long.")
+      stderr.writeLine("Average length: ", lenStats.mean(), " bp. (", lenStats.min, "-", lenStats.max, ")",
+        "\nAverage coverage ", covStats.mean(), "X, (", covStats.min, "-", covStats.max, ")")
        
   except:
     echo p.help

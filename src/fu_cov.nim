@@ -126,11 +126,11 @@ proc main(args: seq[string]) =
         pf += 1
         echo ">", r.name, " ", r.comment, "\n", r.seq;
       
-      stderr.writeLine(pf, "/", lenStats.n, " sequences printed (", covStats.n ," with coverage info).")
-      stderr.writeLine(fmt"Discarded:        {skip_lo_cov} low coverage, {skip_hi_cov} high coverage, {skip_short} too short, {skip_long} too long.")
-      stderr.writeLine(fmt"Average length:   {lenStats.mean():.2f} bp, [{lenStats.min} - {lenStats.max}]")
-      if covStats.n > 0:
-        stderr.writeLine(fmt"Average coverage: {covStats.mean():.2f}X, [{covStats.min:.1f}-{covStats.max:.1f}]")
+    stderr.writeLine(pf, "/", lenStats.n, " sequences printed (", covStats.n ," with coverage info).")
+    stderr.writeLine(fmt"Discarded:        {skip_lo_cov} low coverage, {skip_hi_cov} high coverage, {skip_short} too short, {skip_long} too long.")
+    stderr.writeLine(fmt"Average length:   {lenStats.mean():.2f} bp, [{lenStats.min} - {lenStats.max}]")
+    if covStats.n > 0:
+      stderr.writeLine(fmt"Average coverage: {covStats.mean():.2f}X, [{covStats.min:.1f}-{covStats.max:.1f}]")
   except:
     echo p.help
     stderr.writeLine("Arguments error: ", getCurrentExceptionMsg())

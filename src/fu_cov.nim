@@ -1,28 +1,42 @@
 import klib
 import re
 import argparse
-import tables, strutils
+import strutils
 import stats
 import strformat
 from os import fileExists
+import algorithm 
 
 const prog = "fu-cov"
-const version = "0.2.0"
+const version = "0.3.0"
+
+#[
+   extract contigs by coverage
+
+  0.3   Added in memory sorting
+  0.2   Added statistics
+]#
+
 
 # Chars in numbers (floating)
 let nums = @['0','1','2','3','4','5','6','7','8','9','0','.']
 # Coverage strings in assembly outputs (spades, unicycler, megahit, shovill, skesa)
 let prefixes = @["cov=", "multi=", "cov_", "depth="]
 
+# Contig data
+type
+    ContigInfo = tuple[name: string, comment: string, cov: float, length: int, sequence: string]
 var
   covStats: RunningStat
   lenStats: RunningStat
+  ctgData = newSeq[ContigInfo]()
 
-#[
-   extract contigs by coverage
 
-  0.2   Added statistics
-]#
+proc rev[T](xs: openarray[T]): seq[T] =
+  result = newSeq[T](xs.len)
+  for i, x in xs:
+    #result[^i-1] = x # or: 
+    result[xs.high-i] = x
 
 proc verbose(msg: string, print: bool) =
   if print:
@@ -43,10 +57,12 @@ proc format_dna(seq: string, format_width: int): string =
 var p = newParser(prog):
   help("Extract contig by sequence length and coverage, if provided in the sequence name.")
   flag("-v", "--verbose", help="Print verbose messages")
+  flag("-s", "--sort", help="Store contigs in memory and sort by descending coverage")
   option("-c", "--min-cov", help="Minimum coverage", default="0.0")
   option("-l", "--min-len", help = "Minimum length", default = "0")
   option("-x", "--max-cov", help = "Maximum coverage", default = "0.0")
   option("-y", "--max-len", help = "Maximum length", default = "0")
+  option("-t", "--top", help = "Print the first TOP sequences (passing filters) when using --sort", default="1")
   arg("inputfile",  nargs = -1)
  
 proc getNumberAfterPos(s: string, pos: int): float =
@@ -77,6 +93,8 @@ proc main(args: seq[string]) =
       skip_lo_cov = 0
       skip_short  = 0
       skip_long   = 0
+      covTable    = newSeq[ContigInfo]()
+
  
     if opts.inputfile.len() == 0:
       echo "Missing arguments."
@@ -113,10 +131,12 @@ proc main(args: seq[string]) =
           continue
         
         lenStats.push(len(r.seq))
-        if opts.min_cov != "0.0" or opts.max_cov != "0.0":
-          var cov = getCovFromString(r.name & " " & r.comment)
-          if cov >= 0:
-            covStats.push(cov)
+
+        # Coverage check
+        var cov = getCovFromString(r.name & " " & r.comment)
+        if cov >= 0:
+          covStats.push(cov)
+          
           if opts.min_cov != "0.0" and cov < parseFloat(opts.min_cov):
             skip_lo_cov += 1
             continue
@@ -125,13 +145,26 @@ proc main(args: seq[string]) =
             continue
         
         pf += 1
-        echo ">", r.name, " ", r.comment, "\n", r.seq;
+        if opts.sort == false:
+          echo ">", r.name, " ", r.comment, "\n", r.seq;
+        else:
+          covTable.add((name: r.name, comment: r.comment, cov: cov, length: len(r.seq), sequence: r.seq))
       
     stderr.writeLine(pf, "/", lenStats.n, " sequences printed (", covStats.n ," with coverage info) from ", ff , " files.")
-    stderr.writeLine(fmt"Skipped:          {skip_lo_cov} low coverage, {skip_hi_cov} high coverage, {skip_short} too short, {skip_long} too long.")
+    stderr.writeLine(fmt"Skipped:          {skip_short} too short, {skip_long} too long, then {skip_lo_cov} low coverage, {skip_hi_cov} high coverage, .")
     stderr.writeLine(fmt"Average length:   {lenStats.mean():.2f} bp, [{lenStats.min} - {lenStats.max}]")
     if covStats.n > 0:
       stderr.writeLine(fmt"Average coverage: {covStats.mean():.2f}X, [{covStats.min:.1f}-{covStats.max:.1f}]")
+
+    if opts.sort == true:
+      var
+        top = 0
+      for i in rev(covTable.sortedByIt(it.cov)):
+        top += 1
+        echo ">", i.name, " ", i.comment, "\n", i.sequence
+        if top > parseInt(opts.top):
+          break
+      
   except:
     echo p.help
     stderr.writeLine("Arguments error: ", getCurrentExceptionMsg())

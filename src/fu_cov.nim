@@ -8,11 +8,12 @@ from os import fileExists
 import algorithm 
 
 const prog = "fu-cov"
-const version = "0.3.0"
+const version = "0.3.1"
 
 #[
    extract contigs by coverage
 
+  0.3.1 Bug fixes, improved statistics   
   0.3   Added in memory sorting
   0.2   Added statistics
 ]#
@@ -122,7 +123,20 @@ proc main(args: seq[string]) =
 
       while f.readFastx(r):
         c+=1
+        lenStats.push(len(r.seq))
+        var cov = getCovFromString(r.name & " " & r.comment)
 
+        # Coverage check
+        if cov >= 0:
+          covStats.push(cov)
+          if opts.min_cov != "0.0" and cov < parseFloat(opts.min_cov):
+            skip_lo_cov += 1
+            continue
+          if opts.max_cov != "0.0" and cov > parseFloat(opts.max_cov):
+            skip_hi_cov += 1
+            continue
+
+        # Contig length filter
         if opts.min_len != "0" and len(r.seq) < parseInt(opts.min_len):
           skip_short += 1
           continue
@@ -130,21 +144,9 @@ proc main(args: seq[string]) =
           skip_long += 1
           continue
         
-        lenStats.push(len(r.seq))
-
-        # Coverage check
-        var cov = getCovFromString(r.name & " " & r.comment)
-        if cov >= 0:
-          covStats.push(cov)
-          
-          if opts.min_cov != "0.0" and cov < parseFloat(opts.min_cov):
-            skip_lo_cov += 1
-            continue
-          if opts.max_cov != "0.0" and cov > parseFloat(opts.max_cov):
-            skip_hi_cov += 1
-            continue
         
         pf += 1
+
         if opts.sort == false:
           echo ">", r.name, " ", r.comment, "\n", r.seq;
         else:
@@ -164,6 +166,7 @@ proc main(args: seq[string]) =
         
         if top > parseInt(opts.top):
           break
+        
         echo ">", i.name, " ", i.comment, "\n", i.sequence
       
   except:

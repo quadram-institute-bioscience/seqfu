@@ -57,12 +57,12 @@ proc format_dna(seq: string, format_width: int): string =
 var p = newParser(prog):
   help("Extract contig by sequence length and coverage, if provided in the sequence name.")
   flag("-v", "--verbose", help="Print verbose messages")
-  flag("-s", "--sort", help="Store contigs in memory and sort by descending coverage")
+  flag("-s", "--sort", help="Store contigs in memory, and sort them by descending coverage")
   option("-c", "--min-cov", help="Minimum coverage", default="0.0")
   option("-l", "--min-len", help = "Minimum length", default = "0")
   option("-x", "--max-cov", help = "Maximum coverage", default = "0.0")
   option("-y", "--max-len", help = "Maximum length", default = "0")
-  option("-t", "--top", help = "Print the first TOP sequences (passing filters) when using --sort", default="1")
+  option("-t", "--top", help = "Print the first TOP sequences (passing filters) when using --sort", default="10")
   arg("inputfile",  nargs = -1)
  
 proc getNumberAfterPos(s: string, pos: int): float =
@@ -161,9 +161,10 @@ proc main(args: seq[string]) =
         top = 0
       for i in rev(covTable.sortedByIt(it.cov)):
         top += 1
-        echo ">", i.name, " ", i.comment, "\n", i.sequence
+        
         if top > parseInt(opts.top):
           break
+        echo ">", i.name, " ", i.comment, "\n", i.sequence
       
   except:
     echo p.help

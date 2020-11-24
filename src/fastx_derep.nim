@@ -161,4 +161,5 @@ Options:
       echo ">", name,  "\n", format_dna(repSeq, lineWidth)
 
     echoVerbose($(n) & " representative sequences out of " & $(total) & " initial sequences.", args["--verbose"])
-    echo pretty(%*seqFiles)
+    
+    #echo pretty(%*seqFiles)

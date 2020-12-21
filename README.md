@@ -1,4 +1,4 @@
-# FASTA/FASTQ Dereplication
+# SeqFu Utils
 
 ![Commit](https://img.shields.io/github/last-commit/telatin/nim-stuff)
 ![Version 0.4.0](https://img.shields.io/badge/version-0.4.0-blue)

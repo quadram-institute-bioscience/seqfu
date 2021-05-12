@@ -1,8 +1,20 @@
-<img alt="seqfu logo" align="right" width="200" height="200" src="https://raw.githubusercontent.com/quadram-institute-bioscience/seqfu/master/docs/seqfu-logo-small.png">
+<img alt="seqfu logo" align="right" width="130" height="130" src="https://raw.githubusercontent.com/quadram-institute-bioscience/seqfu/master/docs/seqfu-logo-small.png">
+
+This repository is no longer maintained.
+
+A rewritten version of the suite is available: **[seqfu2](https://telatin.github.io/seqfu2)**
 
 
-:zap: A new version of the core module is **[seqfu2](https://telatin.github.io/seqfu2)**
+### Install SeqFu
 
----
+SeqFu is available from Bioconda:
 
-This repository was built upon the [FASTX::Reader](https://metacpan.org/release/FASTX-Reader) Perl module. 
+```
+conda install -c bioconda seqfu
+```
+
+
+#### Citation
+
+Telatin A, Fariselli P, Birolo G. *SeqFu: A Suite of Utilities for the Robust and Reproducible Manipulation of Sequence Files*. 
+Bioengineering 2021, 8, 59. [doi.org/10.3390/bioengineering8050059](https://doi.org/10.3390/bioengineering8050059)

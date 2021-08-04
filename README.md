@@ -32,7 +32,7 @@ cpanm Proch::N50
 conda install -c bioconda n50
 ```
 
-📦 [Metacpan page|https://metacpan.org/dist/Proch-N50]
+📦 See [Metacpan page](https://metacpan.org/dist/Proch-N50)
 
 ### Citation
 

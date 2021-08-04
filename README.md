@@ -1,6 +1,6 @@
 <img alt="seqfu logo" align="right" width="130" height="130" src="https://raw.githubusercontent.com/quadram-institute-bioscience/seqfu/master/docs/seqfu-logo-small.png">
 
-⚠️ **This repository is no longer maintained.**
+⚠️ ** `seqfu` repository is no longer maintained.**
 
 A rewritten version of the suite is available: **[seqfu2](https://telatin.github.io/seqfu2)**
 
@@ -13,6 +13,22 @@ SeqFu is available from Bioconda:
 conda install -c bioconda seqfu
 ```
 
+### `n50` utility and Perl module
+
+The `Proch::N50` Perl module, and its utility `n50` are still maintained 
+in this repository. Please open an [issue|https://github.com/quadram-institute-bioscience/seqfu/issues] here
+if you find problems using either.
+
+*n50* is available both via CPAN and Miniconda:
+```
+# Install via CPAN minus
+cpanm Proch::N50
+
+# Install via Miniconda
+conda install -c bioconda n50
+```
+
+📦 [Metacpan page|https://metacpan.org/dist/Proch-N50]
 
 ### Citation
 

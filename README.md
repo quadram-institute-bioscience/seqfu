@@ -18,7 +18,7 @@ conda install -c bioconda seqfu
 ### `n50` utility and Perl module
 
 The `Proch::N50` Perl module, and its utility `n50` are still maintained 
-in this repository. Please open an [issue|https://github.com/quadram-institute-bioscience/seqfu/issues] here
+in this repository. Please open an [issue](https://github.com/quadram-institute-bioscience/seqfu/issues) here
 if you find problems using either.
 
 *n50* is available both via CPAN and Miniconda:

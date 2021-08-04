@@ -4,7 +4,7 @@ package Proch::N50;
 use 5.012;
 use warnings;
 my  $opt_digits = 2;
-$Proch::N50::VERSION = '1.3.0';
+$Proch::N50::VERSION = '1.4.0';
 use File::Spec;
 use JSON::PP;
 use FASTX::Reader;
@@ -168,8 +168,17 @@ Returns N50, min and max lengths.
 
 =back
 
-=cut
 
+=head1 SUPPORT
+
+SeqFu is a compiled suite of utilities that includes a B<seqfu stats> module. 
+SeqFu is currently the ideal choice that can replace the C<n50> program.
+
+If you are interested in contributing to the development of this module, or
+in reporting bugs, please refer to the legacy repository
+L<https://github.com/quadram-institute-bioscience/seqfu/issues>.
+
+=cut
 sub getStats {
     # Parses a FASTA/FASTQ file and returns stats
     # Parameters:

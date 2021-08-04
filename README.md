@@ -1,12 +1,10 @@
-<img alt="seqfu logo" align="right" width="130" height="130" src="https://raw.githubusercontent.com/quadram-institute-bioscience/seqfu/master/docs/seqfu-logo-small.png">
+<a href="https://telatin.github.io/seqfu2"><img alt="seqfu logo" align="right" width="130" height="130" src="https://raw.githubusercontent.com/quadram-institute-bioscience/seqfu/master/docs/seqfu-logo-small.png"></p>
 
-![Unmaintained](https://img.shields.io/maintenance/no/2019?style=flat-square)
+[![Unmaintained](https://img.shields.io/maintenance/no/2019?style=flat-square)](https://telatin.github.io/seqfu2)
 [![Moved to SeqFu2](https://img.shields.io/badge/repository%20moved-seqfu-blue?style=flat-square)](https://telatin.github.io/seqfu2)
 [![Perl module](https://img.shields.io/badge/Perl%20Module-Proch::N50-brown?style=flat-square)](https://metacpan.org/dist/Proch-N50)
 
 ➡️ A rewritten version of the suite is available: **[seqfu2](https://telatin.github.io/seqfu2)**
-
-
 
 
 ### Install SeqFu

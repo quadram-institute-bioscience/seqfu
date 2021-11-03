@@ -4,7 +4,7 @@ package Proch::N50;
 use 5.012;
 use warnings;
 my  $opt_digits = 2;
-$Proch::N50::VERSION = '1.4.1';
+$Proch::N50::VERSION = '1.4.2';
 use File::Spec;
 use JSON::PP;
 use FASTX::Reader;
@@ -335,8 +335,8 @@ sub jsonStats {
   if (defined $stats->{json}) {
     return $stats->{json}
   } else {
-    # Return undef otherwise
-    return undef;
+    # Return otherwise
+    return ;
   }
 }
 

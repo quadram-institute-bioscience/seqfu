@@ -1,4 +1,8 @@
+# [SeqFu](https://github.com/telatin/seqfu2#readme)
+
 ## `n50` utility and Perl module
+
+[![Perl module](https://img.shields.io/badge/Perl%20Module-Proch::N50-brown?style=flat-square)](https://metacpan.org/dist/Proch-N50)
 
 The `Proch::N50` Perl module, and its utility `n50` are still maintained 
 in this repository. Please open an [issue](https://github.com/quadram-institute-bioscience/seqfu/issues)

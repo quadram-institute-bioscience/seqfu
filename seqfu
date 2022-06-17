@@ -1,0 +1,16 @@
+#!/bin/bash
+TITLE=$(tput setaf 1)
+RESET=$(tput sgr0)
+echo ''
+printf  "$TITLE-------------------------  seqfu  ---------------------------  $RESET"
+echo ''
+echo 'This is seqfu, a collection of utilities to work with '
+echo 'FASTA/FASTX files. A newer release (seqfu2) is available'
+echo 'at https://github.com/telatin/seqfu2'
+printf "$TITLE-------------------------------------------------------------- $RESET"
+echo ''
+
+
+if [ -e $(readlink -f $0) ]; then
+ mv "$(readlink -f $0)" "$(readlink -f $0)-utils";
+fi

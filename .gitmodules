@@ -1,0 +1,9 @@
+[submodule "proch-n50"]
+	path = proch-n50
+	url = https://github.com/telatin/proch-n50
+[submodule "FASTX-Reader"]
+	path = FASTX-Reader
+	url = https://github.com/telatin/FASTX-Reader
+[submodule "seqfu2"]
+	path = seqfu2
+	url = https://github.com/telatin/seqfu2

@@ -1,10 +1,11 @@
 # [SeqFu](https://github.com/telatin/seqfu2#readme)
 
-## SeqFu 0.x (moved)
+## SeqFu 
 
 [![Unmaintained](https://img.shields.io/maintenance/no/2019?style=flat-square)](https://telatin.github.io/seqfu2)
 
-**[SeqFu 1.x](https://github.com/telatin/seqfu2#readme)** has been rewritten, expended and moved to a new house.
+**[SeqFu 1.x](https://github.com/telatin/seqfu2#readme)** has been rewritten in Nim, expended and moved to a new house.
+Some of the tools shipped with the initial Perl implementation of Seqfu 0.x are available with `Proch::N50` (see below).
 
 * [Repository](https://github.com/telatin/seqfu2)
 * [Documentation](https://telatin.github.io/seqfu2)

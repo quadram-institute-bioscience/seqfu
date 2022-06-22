@@ -1,10 +1,10 @@
 # [SeqFu](https://github.com/telatin/seqfu2#readme)
 
-## SeqFu (moved)
+## SeqFu 0.x (moved)
 
 [![Unmaintained](https://img.shields.io/maintenance/no/2019?style=flat-square)](https://telatin.github.io/seqfu2)
 
-**[SeqFu](https://github.com/telatin/seqfu2#readme)** has been rewritten, expended and moved to a new house.
+**[SeqFu 1.x](https://github.com/telatin/seqfu2#readme)** has been rewritten, expended and moved to a new house.
 
 * [Repository](https://github.com/telatin/seqfu2)
 * [Documentation](https://telatin.github.io/seqfu2)
